@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
 const appError = require("../utils/appError");
-const statustxt = require("../utils/statustxt");
+const statusText = require("../utils/statusText");
 
 const verifyToken = (req, res, next)=>{
     const authHeader = req.headers["Authorization"] || req.headers["authorization"];
     if(!authHeader){
-        appError.create("access denied, token is required", 401, statustxt.FAIL);
+        appError.create("access denied, token is required", 401, statusText.FAIL);
         return next(appError);
     }
 
@@ -17,7 +17,7 @@ const verifyToken = (req, res, next)=>{
         req.currentUser = currentUser;
         next();
     }catch{
-        appError.create("invalid token", 401, statustxt.FAIL);
+        appError.create("invalid token", 401, statusText.FAIL);
         return next(appError);
     }
     
