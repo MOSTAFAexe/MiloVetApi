@@ -9,6 +9,10 @@ router
     .get(animalController.getAllAnimals)
     .post(animalController.createAnimal);
 
+router.get("/filter", animalController.filterAnimals);
+
+router.get("/:ownerId", animalController.getAnimalsByOwner);
+
 router
     .route("/:animalId")
     .get(animalController.getAnimalById)

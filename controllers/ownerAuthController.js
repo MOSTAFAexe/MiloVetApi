@@ -5,6 +5,7 @@ const AppError = require("../utils/appError");
 const generateJWT = require("../utils/generateJWT");
 
 const bcrypt = require("bcrypt");
+const userRoles = require("../utils/userRoles");
 
 const register = asyncWrapper(async (req, res, next) => {
     const {
@@ -47,7 +48,7 @@ const register = asyncWrapper(async (req, res, next) => {
     const token = await generateJWT({
         email: newOwner.email,
         ownerId: newOwner._id,
-        role: "owner",
+        role: userRoles.OWNER,
     });
 
     newOwner.token = token;
