@@ -25,10 +25,16 @@ const vetsRouter = require("./routes/vets.route");
 const animalsRouter = require("./routes/animals.route");
 const articlesRouter = require("./routes/articles.route");
 
+// will be removed
+const vetsAuthRouter = require("./routes/vetsAuth.route");
+
 app.use("/api/owners", ownersRouter);
 app.use("/api/vets", vetsRouter);
 app.use("/api/animals", animalsRouter);
 app.use("/api/articles", articlesRouter);
+
+// will be removed
+app.use("/api/auth/vets", vetsAuthRouter)
 
 // default route
 // global middleware for not found routes
