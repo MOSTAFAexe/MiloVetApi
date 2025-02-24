@@ -4,14 +4,15 @@ const articleSchema = new mongoose.Schema({
     title: { 
         type: String, 
         required: true, 
-        trim: true },
+        trim: true 
+    },
 
     content: { 
         type: String, 
         required: true 
     },
 
-    Category: { 
+    category: { 
         type: String, 
         required: true, 
         trim: true 
@@ -20,6 +21,11 @@ const articleSchema = new mongoose.Schema({
     createdTime: { 
         type: Date, 
         default: Date.now 
+    },
+
+    photo: {
+        type: String,
+        default: "uploads/article.png"
     },
 
     vetId: {

@@ -1,9 +1,6 @@
-const bcrypt = require("bcryptjs");
-
 const Vet = require("../models/vet.model");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
-const generateJWT = require("../utils/generateJWT");
 const statusText = require("../utils/statusText");
 
 const getAllVets = asyncWrapper(async (req, res)=>{
