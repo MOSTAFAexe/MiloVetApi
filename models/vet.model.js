@@ -58,8 +58,8 @@ const vetSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
-        default: ()=>{
-            return this.gender === "male"
+        default: function () {
+            return this.gender == "male"
               ? "uploads/maleVet.png"
               : "uploads/femaleVet.png";
           }
