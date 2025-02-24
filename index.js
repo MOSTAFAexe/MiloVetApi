@@ -21,21 +21,17 @@ app.use(express.json());
 
 // Routers
 const ownersRouter = require("./routes/owners.route");
-const ownerAuthRouter = require("./routes/ownerAuth.route");
 const vetsRouter = require("./routes/vets.route");
 const animalsRouter = require("./routes/animals.route");
 const articlesRouter = require("./routes/articles.route");
-
-// will be removed
+const ownerAuthRouter = require("./routes/ownerAuth.route");
 const vetsAuthRouter = require("./routes/vetsAuth.route");
 
 app.use("/api/owners", ownersRouter);
-app.use("/api/auth/owners", ownerAuthRouter);
 app.use("/api/vets", vetsRouter);
 app.use("/api/animals", animalsRouter);
 app.use("/api/articles", articlesRouter);
-
-// will be removed
+app.use("/api/auth/owners", ownerAuthRouter);
 app.use("/api/auth/vets", vetsAuthRouter)
 
 // default route
