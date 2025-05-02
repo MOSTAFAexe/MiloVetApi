@@ -16,7 +16,6 @@ const register = asyncWrapper(async (req, res, next) => {
         phone,
         address,
         gender,
-        role,
     } = req.body;
 
     if (!firstName || !lastName || !email || !password || !gender) {
@@ -42,7 +41,6 @@ const register = asyncWrapper(async (req, res, next) => {
         phone,
         address,
         gender,
-        role,
     });
 
     const token = await generateJWT({

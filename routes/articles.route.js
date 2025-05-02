@@ -8,10 +8,10 @@ const allowedTo = require("../middlewares/allowedTo");
 const userRoles = require("../utils/userRoles");
 
 router.route("/")
-    .get(verifyToken, allowedTo(userRoles.OWNER), articleController.getAllArticles);
+    .get(verifyToken, articleController.getAllArticles);
 
 router.route("/search")
-    .get(verifyToken, allowedTo(userRoles.OWNER), articleController.searchArticles);
+    .get(verifyToken, articleController.searchArticles);
 
 router.route("/create")
     .post(verifyToken, allowedTo(userRoles.VET), articleController.createArticle);

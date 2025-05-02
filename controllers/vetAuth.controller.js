@@ -31,7 +31,10 @@ const register = asyncWrapper(async (req, res, next)=>{
     newVet.token = await generateJWT({id: newVet._id, email: newVet.email, role: newVet.role});
     await newVet.save();
 
-    res.status(201).json({status: statusText.SUCCESS, data: {vet: newVet}})
+    const myVet = newVet.toObject();
+    delete myVet.password;
+    delete myVet.__v;
+    res.status(201).json({status: statusText.SUCCESS, data: {vet: myVet}})
 })
 
 const login = asyncWrapper(async (req, res, next)=>{
@@ -47,8 +50,11 @@ const login = asyncWrapper(async (req, res, next)=>{
     const isMatched = await bcrypt.compare(password, vet.password);
     if(vet && isMatched){
         const token = await generateJWT({id: vet._id, email: vet.email, role: vet.role});
-        vet.token = token
-        res.json({status: statusText.Success,  data: {token}})
+        vet.token = token;
+        const myVet = vet.toObject();
+        delete myVet.password;
+        delete myVet.__v;
+        res.json({status: statusText.Success,  data: {vet: myVet}});
     }
     else{
         return next(appError.create("your email or password might be wrong", 400, statusText.FAIL));

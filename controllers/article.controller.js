@@ -20,13 +20,13 @@ const createArticle = asyncWrapper( async (req, res, next)=>{
 });
 
 const getAllArticles = asyncWrapper(async (req, res, next)=>{
-    query = req.query;
+    let query = req.query;
     
-    const limit = query.limit || 15;
-    const page = query.page || 1;
-    const skip = (page - 1) * limit;
+    let limit = query.limit || 15;
+    let page = query.page || 1;
+    let skip = (page - 1) * limit;
 
-    const articles = await Article.find({}, {"__v": 0}).limit(limit).skip(skip);
+    let articles = await Article.find({}, {"__v": 0}).limit(limit).skip(skip);
     res.status(200).json({status: statusText.SUCCESS, data: {articles}})
 });
 
