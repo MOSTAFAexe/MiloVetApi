@@ -28,7 +28,7 @@ const register = asyncWrapper(async (req, res, next) => {
             imageUrl = result.secure_url;
             }
             catch (error) {
-                return next(appError.create("Image upload failed", 500, statusText.FAIL));
+                return next(AppError.create("Image upload failed", 500, statusText.FAIL));
             }
         } 
         else {
