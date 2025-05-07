@@ -26,13 +26,15 @@ const animalsRouter = require("./routes/animals.route");
 const articlesRouter = require("./routes/articles.route");
 const ownerAuthRouter = require("./routes/ownerAuth.route");
 const vetsAuthRouter = require("./routes/vetsAuth.route");
+const diseaseRouter = require("./routes/disease.route");
 
 app.use("/api/owners", ownersRouter);
 app.use("/api/vets", vetsRouter);
 app.use("/api/animals", animalsRouter);
 app.use("/api/articles", articlesRouter);
 app.use("/api/auth/owners", ownerAuthRouter);
-app.use("/api/auth/vets", vetsAuthRouter)
+app.use("/api/auth/vets", vetsAuthRouter);
+app.use("/api/diseases", diseaseRouter);
 
 // default route
 // global middleware for not found routes

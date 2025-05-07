@@ -4,6 +4,8 @@ const Animal = require("../models/animal.model");
 const Owner = require("../models/owner.mode");
 const AppError = require("../utils/appError");
 
+const cloudinary = require("../utils/cloudinary");
+
 const getAllAnimals = asyncWrapper(async (req, res, next) => {
     const animals = await Animal.find()
         .populate("ownerId", "firstName lastName")
