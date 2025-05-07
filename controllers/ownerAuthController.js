@@ -12,30 +12,30 @@ const cloudinary = require("../utils/cloudinary");
 const register = asyncWrapper(async (req, res, next) => {
 
     let imageUrl = "";
-        if (req.file) {
-            try {
-                const result = await new Promise((resolve, reject) => {
-                    const stream = cloudinary.uploader.upload_stream(
-                        { folder: "owners" },
-                        (error, result) => {
-                            if (error) reject(error);
-                            else resolve(result);
-                        }
-                    );
-                stream.end(req.file.buffer); 
-            });
-    
-            imageUrl = result.secure_url;
-            }
-            catch (error) {
-                return next(AppError.create("Image upload failed", 500, status.FAIL));
-            }
-        } 
-        else {
-            imageUrl = req.body.gender === "male"
-                ? "https://res.cloudinary.com/dfasayt50/image/upload/v1746489736/male_lw8pvo.png"
-                : "https://res.cloudinary.com/dfasayt50/image/upload/v1746489735/female_hzognu.png";
-            }
+    if (req.file) {
+        try {
+            const result = await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                    { folder: "owners" },
+                    (error, result) => {
+                        if (error) reject(error);
+                        else resolve(result);
+                    }
+                );
+            stream.end(req.file.buffer); 
+        });
+
+        imageUrl = result.secure_url;
+        }
+        catch (error) {
+            return next(AppError.create("Image upload failed", 500, status.FAIL));
+        }
+    } 
+    else {
+        imageUrl = req.body.gender === "male"
+            ? "https://res.cloudinary.com/dfasayt50/image/upload/v1746489736/male_lw8pvo.png"
+            : "https://res.cloudinary.com/dfasayt50/image/upload/v1746489735/female_hzognu.png";
+        }
 
     const {
         firstName,
