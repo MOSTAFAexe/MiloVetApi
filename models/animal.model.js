@@ -12,23 +12,22 @@ const animalSchema = new mongoose.Schema({
         enum: ["dog", "cat", "horse"],
         required: true,
     },
-
-    breed: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-
+    
     age: {
         type: Number,
         required: true,
         min: 0,
     },
-
+    
     gender: {
         type: String,
         enum: ["male", "female"],
         required: true,
+    },
+    
+    breed: {
+        type: String,
+        trim: true,
     },
 
     status: {

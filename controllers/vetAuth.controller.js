@@ -6,9 +6,37 @@ const appError = require("../utils/appError");
 const generateJWT = require("../utils/generateJWT");
 const statusText = require("../utils/statusText");
 
-const register = asyncWrapper(async (req, res, next)=>{
-    const {firstName, lastName, email, password, gender, speciality} = req.body;
+// cloudinary
+const cloudinary = require("../utils/cloudinary");
 
+const register = asyncWrapper(async (req, res, next)=>{
+    
+    let imageUrl = "";
+    if (req.file) {
+        try {
+            const result = await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                    { folder: "vets" },
+                    (error, result) => {
+                        if (error) reject(error);
+                        else resolve(result);
+                    }
+                );
+            stream.end(req.file.buffer); 
+        });
+
+        imageUrl = result.secure_url;
+        }
+        catch (error) {
+            return next(appError.create("Image upload failed", 500, statusText.FAIL));
+        }
+    } else {
+        imageUrl = req.body.gender === "male"
+            ? "https://res.cloudinary.com/dfasayt50/image/upload/v1746489743/maleVet_siubjg.png"
+            : "https://res.cloudinary.com/dfasayt50/image/upload/v1746489742/femaleVet_mpcyah.png";
+        }
+    
+    const {firstName, lastName, email, password, gender, speciality} = req.body;
     const vet = await Vet.findOne({email: email});
     if(vet){
         appError.create("this email is already exists", 400, statusText.FAIL);
@@ -25,6 +53,7 @@ const register = asyncWrapper(async (req, res, next)=>{
         password: hashedPassword,
         gender,
         speciality,
+        avatar: imageUrl,
     });
 
     // generate JWT token
@@ -35,7 +64,7 @@ const register = asyncWrapper(async (req, res, next)=>{
     delete myVet.password;
     delete myVet.__v;
     res.status(201).json({status: statusText.SUCCESS, data: {vet: myVet}})
-})
+});
 
 const login = asyncWrapper(async (req, res, next)=>{
     const {email, password} = req.body;

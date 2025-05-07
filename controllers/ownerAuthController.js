@@ -7,7 +7,36 @@ const generateJWT = require("../utils/generateJWT");
 const bcrypt = require("bcrypt");
 const userRoles = require("../utils/userRoles");
 
+const cloudinary = require("../utils/cloudinary");
+
 const register = asyncWrapper(async (req, res, next) => {
+
+    let imageUrl = "";
+        if (req.file) {
+            try {
+                const result = await new Promise((resolve, reject) => {
+                    const stream = cloudinary.uploader.upload_stream(
+                        { folder: "owners" },
+                        (error, result) => {
+                            if (error) reject(error);
+                            else resolve(result);
+                        }
+                    );
+                stream.end(req.file.buffer); 
+            });
+    
+            imageUrl = result.secure_url;
+            }
+            catch (error) {
+                return next(appError.create("Image upload failed", 500, statusText.FAIL));
+            }
+        } 
+        else {
+            imageUrl = req.body.gender === "male"
+                ? "https://res.cloudinary.com/dfasayt50/image/upload/v1746489736/male_lw8pvo.png"
+                : "https://res.cloudinary.com/dfasayt50/image/upload/v1746489735/female_hzognu.png";
+            }
+
     const {
         firstName,
         lastName,
@@ -41,6 +70,7 @@ const register = asyncWrapper(async (req, res, next) => {
         phone,
         address,
         gender,
+        avatar: imageUrl,
     });
 
     const token = await generateJWT({
