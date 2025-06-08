@@ -37,14 +37,6 @@ const getAnimalById = asyncWrapper(async (req, res, next) => {
 const createAnimal = asyncWrapper(async (req, res, next) => {
     const { animalName, species, breed, age, gender, status, medicalHistory, ownerId } = req.body;
 
-    // "animalName": "Luna",
-    // "species": "dog",
-    // "breed": "Siamese",
-    // "age": 1,
-    // "gender": "female",
-    // "status": "healthy",
-    // "medicalHistory": "No medical history",
-    // "ownerId": "67ba7a3a80fd30f185243f4d"
     let imageUrl = "";
     if (req.file) {
         try {
