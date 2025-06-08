@@ -35,7 +35,43 @@ const getAnimalById = asyncWrapper(async (req, res, next) => {
 });
 
 const createAnimal = asyncWrapper(async (req, res, next) => {
-    const { ownerId } = req.body;
+    const { animalName, species, breed, age, gender, status, medicalHistory, ownerId } = req.body;
+
+    // "animalName": "Luna",
+    // "species": "dog",
+    // "breed": "Siamese",
+    // "age": 1,
+    // "gender": "female",
+    // "status": "healthy",
+    // "medicalHistory": "No medical history",
+    // "ownerId": "67ba7a3a80fd30f185243f4d"
+    let imageUrl = "";
+    if (req.file) {
+        try {
+            const result = await new Promise((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream(
+                    { folder: "animals" },
+                    (error, result) => {
+                        if (error) reject(error);
+                        else resolve(result);
+                    }
+                );
+            stream.end(req.file.buffer); 
+        });
+
+        imageUrl = result.secure_url;
+        }
+        catch (error) {
+            return next(AppError.create("Image upload failed", 500, status.FAIL));
+        }
+    } 
+    else {
+        imageUrl = req.body.species === "cat"
+            ? "https://res.cloudinary.com/dfasayt50/image/upload/v1746489732/cat_td0d1r.png"
+            : req.body.species === "dog"
+            ? "https://res.cloudinary.com/dfasayt50/image/upload/v1746489735/dog_oi26sm.png"
+            : "https://res.cloudinary.com/dfasayt50/image/upload/v1746489736/horse_klhoao.png";
+        }
 
     // Check if owner exists
     const ownerExists = await Owner.findById(ownerId);
@@ -43,7 +79,19 @@ const createAnimal = asyncWrapper(async (req, res, next) => {
         return next(AppError.create("Owner not found", 404, statusCode.ERROR));
     }
 
-    let animal = await Animal.create(req.body);
+    let animal = await Animal.create(
+        {
+            animalName, 
+            species, 
+            breed, 
+            age, 
+            gender, 
+            status, 
+            medicalHistory,
+            ownerId,
+            avatar: imageUrl
+        }
+    );
 
     // Add the animal to the owner's animals array
     await Owner.findByIdAndUpdate(ownerId, { $push: { animals: animal._id } });
