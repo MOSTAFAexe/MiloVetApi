@@ -36,6 +36,12 @@ app.use("/api/auth/owners", ownerAuthRouter);
 app.use("/api/auth/vets", vetsAuthRouter);
 app.use("/api/diseases", diseaseRouter);
 
+
+// new 
+const adminRouter = require("./routes/admin.route");
+
+app.use("/api/admins", adminRouter);
+
 // default route
 // global middleware for not found routes
 app.all("*", (req, res, next) => {
