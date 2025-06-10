@@ -22,6 +22,11 @@ const productSchema = new mongoose.Schema({
         required: true,
         min: 0,
     },
+    quantity: {
+        type: Number,
+        required: true,
+        min: 0,
+    },
     rating: {
         type: Number,
         default: 0,
