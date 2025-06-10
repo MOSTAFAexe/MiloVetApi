@@ -87,9 +87,9 @@ const getAllAdmins = asyncWrapper(async (req, res, next) => {
 });
 
 module.exports = {
-  createAdmin,
-  loginAdmin,
-  updateAdmin,
-  deleteAdmin,
-  getAllAdmins,
+    createAdmin,
+    loginAdmin,
+    updateAdmin,
+    deleteAdmin,
+    getAllAdmins,
 };

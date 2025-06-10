@@ -1,27 +1,32 @@
 const express = require("express");
-const {body} = require("express-validator");
+const router = express.Router();
 
-const router = express.Router();  
-const verifyToken = require("../middlewares/verifyToken");
-const allowedTo = require("../middlewares/allowedTo");
-const userRoles = require("../utils/userRoles");
 const upload = require("../middlewares/multer");
+const verifyToken = require("../middlewares/verifyToken");
+const productController = require("../controllers/product.controller");
+const allowedTo = require("../middlewares/allowedTo");
+const userRoles = require("../utils/userRoles")
 
 router.route("/")
-    .get(verifyToken, articleController.getAllArticles);
+    .get(productController.getAllProducts);
+    
+// router.route("/search")
+//     .get(productController.searchByName);
+    
+// router.route("/filter")
+//     .get(productController.filterByCategory);
 
-router.route("/search")
-    .get(verifyToken, articleController.searchArticles);
+router.route("/filterandsearch")
+    .get(productController.filterAndSearch);
 
+// admin
 router.route("/create")
-    .post(verifyToken, allowedTo(userRoles.VET), upload.single("photo"), articleController.createArticle);
-
-router.route("/vetarticles")
-    .get(verifyToken, articleController.getVetArticles);
+    .post(verifyToken, upload.array("images", 5), allowedTo(userRoles.ADMIN, userRoles.MANAGER), productController.createProduct)
 
 router.route("/:id")
-    .patch(verifyToken, allowedTo(userRoles.VET), articleController.updateArticle)
-    .delete(verifyToken, allowedTo(userRoles.VET), articleController.deleteArticle)
-    .get(verifyToken, articleController.getArticleById);
+    .get(productController.getProductById)
+    // admin
+    .patch(verifyToken, allowedTo(userRoles.ADMIN, userRoles.MANAGER), productController.updateProduct)
+    .delete(verifyToken, allowedTo(userRoles.ADMIN, userRoles.MANAGER), productController.removeProduct);
 
 module.exports = router;

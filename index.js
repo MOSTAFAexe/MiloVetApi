@@ -39,8 +39,10 @@ app.use("/api/diseases", diseaseRouter);
 
 // new 
 const adminRouter = require("./routes/admin.route");
+const productRouter = require("./routes/products.route");
 
 app.use("/api/admins", adminRouter);
+app.use("/api/products", productRouter)
 
 // default route
 // global middleware for not found routes
