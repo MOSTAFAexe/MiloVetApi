@@ -28,7 +28,7 @@ const getOwnerById = asyncWrapper(async (req, res, next) => {
     if (!owner)
         return next(AppError.create("Owner not found", 404, status.ERROR));
 
-    res.status(200).json({ status: status.SUCCESS, data: owner });
+    res.status(200).json({ status: status.SUCCESS, data: {owner} });
 });
 
 const updateOwner = asyncWrapper(async (req, res, next) => {

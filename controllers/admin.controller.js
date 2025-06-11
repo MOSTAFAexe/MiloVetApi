@@ -83,7 +83,7 @@ const deleteAdmin = asyncWrapper(async (req, res, next) => {
 // Get all admins
 const getAllAdmins = asyncWrapper(async (req, res, next) => {
     const admins = await Admin.find().select("-password -__v");
-    res.status(200).json({ status: statusText.SUCCESS, data: { admins } });
+    res.status(200).json({ status: statusText.SUCCESS, results: admins.length, data: { admins } });
 });
 
 module.exports = {

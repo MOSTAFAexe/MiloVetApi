@@ -14,9 +14,13 @@ router.route("/search")
 router.route("/experience")
     .get(vetController.getVetsByExperience);
 
+    
 router.route("/:id")
     .get(vetController.getVetById)
     .patch(vetController.updateVet)
     .delete(vetController.deleteVet);
+    
+// router.route("/getbyid/:id")
+//     .get(vetController.getVetById);
 
 module.exports = router;

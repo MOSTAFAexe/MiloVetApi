@@ -6,8 +6,7 @@ const ownerController = require("../controllers/ownerController");
 
 router.route("/").get(ownerController.getAllOwners);
 
-router
-    .route("/:ownerId")
+router.route("/:ownerId")
     .get(ownerController.getOwnerById)
     .patch(ownerController.updateOwner)
     .delete(ownerController.deleteOwner);

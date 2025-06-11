@@ -11,11 +11,11 @@ const getAllVets = asyncWrapper(async (req, res)=>{
     const skip = (page - 1) * limit;
 
     const vets = await Vet.find({}, {"__v": 0, "password": 0}).limit(limit).skip(skip);
-    res.status(200).json({status: statusText.SUCCESS, data: {vets}})
+    res.status(200).json({status: statusText.SUCCESS, results: vets.length,  data: {vets}})
 })
 
 const getVetById = asyncWrapper(async (req, res, next)=>{
-    const vet = await Vet.findById(req.params.id).select("-password -__v");
+    const vet = await Vet.findById(req.params.id.trim()).select("-password -__v");
     if(!vet){
         return next(appError.create("vet not found!", 404, statusText.FAIL));
     }

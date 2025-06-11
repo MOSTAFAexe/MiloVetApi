@@ -18,6 +18,12 @@ router.route("/")
 
 router.route("/filterandsearch")
     .get(productController.filterAndSearch);
+    
+router.route("/outofstock")
+    .get(verifyToken, allowedTo(userRoles.ADMIN, userRoles.MANAGER), productController.getOutOfStockProducts);
+
+router.route("/mostsold")
+    .get(productController.getMostSoldProducts);
 
 // admin
 router.route("/create")
