@@ -58,7 +58,7 @@ const getAllDiseases = asyncWrapper(async (req, res, next)=>{
     let skip = (page - 1) * limit;
 
     let diseases = await Disease.find({}, {"__v": 0}).limit(limit).skip(skip);
-    res.status(200).json({status: statusText.SUCCESS, data: {diseases}})
+    res.status(200).json({status: statusText.SUCCESS, results: diseases.length,  data: {diseases}})
 });
 
 module.exports = {

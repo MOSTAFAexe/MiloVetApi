@@ -114,7 +114,7 @@ const filterAndSearch = asyncWrapper(async (req, res, next) => {
 
 const getAllProducts = asyncWrapper(async (req, res, next) => {
     const products = await Product.find().select("-__v");
-    res.status(200).json({ status: statusText.SUCCESS, data: { products } });
+    res.status(200).json({ status: statusText.SUCCESS, results: products.length,  data: { products } });
 });
 
 const getProductById = asyncWrapper(async (req, res, next) => {
@@ -128,6 +128,18 @@ const getProductById = asyncWrapper(async (req, res, next) => {
     res.status(200).json({ status: statusText.SUCCESS, data: { product } });
 });
 
+const getOutOfStockProducts = asyncWrapper(async (req, res, next) => {
+    const products = await Product.find({ quantity: 0 }).select("-__v");
+
+    return res.status(200).json({status: statusText.SUCCESS, results: products.length, data: { products }});
+});
+
+const getMostSoldProducts = asyncWrapper(async (req, res, next) => {
+    const products = await Product.find().sort({ sold: -1 }).limit(10).select("-__v");
+
+    return res.status(200).json({status: statusText.SUCCESS, results: products.length, data: { products },});
+});
+
 module.exports = {
     createProduct,
     updateProduct,
@@ -137,4 +149,6 @@ module.exports = {
     getAllProducts,
     getProductById,
     filterAndSearch,
+    getOutOfStockProducts,
+    getMostSoldProducts,
 };

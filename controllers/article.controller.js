@@ -53,7 +53,7 @@ const getAllArticles = asyncWrapper(async (req, res, next)=>{
     let skip = (page - 1) * limit;
 
     let articles = await Article.find({}, {"__v": 0}).limit(limit).skip(skip);
-    res.status(200).json({status: statusText.SUCCESS, data: {articles}})
+    res.status(200).json({status: statusText.SUCCESS, results: articles.length,  data: {articles}})
 });
 
 const getVetArticles = asyncWrapper(async (req, res, next)=>{
