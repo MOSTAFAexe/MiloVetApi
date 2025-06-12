@@ -15,14 +15,14 @@ router.route("/search")
     .get(verifyToken, articleController.searchArticles);
 
 router.route("/create")
-    .post(verifyToken, allowedTo(userRoles.VET), upload.single("photo"), articleController.createArticle);
+    .post(verifyToken, upload.single("photo"), articleController.createArticle);
 
 router.route("/vetarticles")
     .get(verifyToken, articleController.getVetArticles);
 
 router.route("/:id")
-    .patch(verifyToken, allowedTo(userRoles.VET), articleController.updateArticle)
-    .delete(verifyToken, allowedTo(userRoles.VET), articleController.deleteArticle)
+    .patch(verifyToken, articleController.updateArticle)
+    .delete(verifyToken, articleController.deleteArticle)
     .get(verifyToken, articleController.getArticleById);
 
 module.exports = router;

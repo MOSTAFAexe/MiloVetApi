@@ -273,16 +273,96 @@ const getLastPendingOrder = asyncWrapper(async (req, res, next) => {
     res.status(200).json({status: statusText.SUCCESS, data: { order: formattedOrder }});
 });
 
+const getAllOrders = asyncWrapper(async (req, res, next) => {
+    const orders = await Order.find()
+        .sort({ status: 1 }) 
+        .select("-__v");
+    res.status(200).json({ status: statusText.SUCCESS, results: orders.length, data: { orders } });
+});
+
+const getOrderById = asyncWrapper(async (req, res, next) => {
+    const order = await Order.findById(req.params.id).select("-__v");
+    if (!order) {
+        return next(appError.create("Order not found", 404, statusText.FAIL));
+    }
+
+    res.status(200).json({ status: statusText.SUCCESS, data: { order } });
+});
+
+const deleteOrder = asyncWrapper(async (req, res, next) => {
+    const deleted = await Order.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+        return next(appError.create("Order not found", 404, statusText.FAIL));
+    }
+
+    res.status(200).json({ status: statusText.SUCCESS, msg: "Order deleted successfully" });
+});
+
+const updateOrderStatus = asyncWrapper(async (req, res, next) => {
+    console.log("from updateOrderStatus");
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const allowedStatuses = ["pending", "confirmed", "shipped", "delivered", "canceled"];
+    if (!allowedStatuses.includes(status)) {
+        return next(appError.create("Invalid status provided", 400, statusText.FAIL));
+    }
+
+    const order = await Order.findById(id);
+    if (!order) {
+        return next(appError.create("Order not found", 404, statusText.FAIL));
+    }
+
+    order.status = status;
+    await order.save();
+
+    res.status(200).json({
+        status: statusText.SUCCESS,
+        data: { order }
+    });
+});
+
+const getOrdersByStatusAndTotalAmount = asyncWrapper(async (req, res, next) => {
+    console.log("from getOrdersByStatusAndTotalAmount");
+
+    const { status, page = 1, limit = 10 } = req.query;
+
+    const validStatuses = ["pending", "confirmed", "shipped", "delivered", "canceled"];
+    if (!status || !validStatuses.includes(status)) {
+        return next(appError.create("Valid status query is required", 400, statusText.FAIL));
+    }
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const allOrders = await Order.find({ status }).select("-__v");
+
+    const totalCombinedAmount = allOrders.reduce((sum, order) => sum + order.totalAmount, 0);
+
+    const sortedOrders = allOrders
+        .sort((a, b) => b.totalAmount - a.totalAmount)
+        .slice(skip, skip + parseInt(limit));
+
+    res.status(200).json({
+        status: statusText.SUCCESS,
+        totalAmountForStatus: totalCombinedAmount,
+        currentPage: parseInt(page),
+        pageSize: parseInt(limit),
+        totalOrders: allOrders.length,
+        totalPages: Math.ceil(allOrders.length / parseInt(limit)),
+        data: { orders: sortedOrders }
+    });
+});
+
 
 module.exports = {
-    // createOrder,
-    // getAllOrders,
-    // getOrderById,
-    // updateOrderStatus,
-    // deleteOrder,
+    getAllOrders,
+    getOrderById,
+    updateOrderStatus,
+    deleteOrder,
     addItemToOrder,
     removeItemFromOrder,
     confirmOrder,
     getLastPendingOrder,
     decreaseItemQuantity,
+    getOrdersByStatusAndTotalAmount,
 };
