@@ -219,13 +219,16 @@ const confirmOrder = asyncWrapper(async (req, res, next) => {
     order.address = address;
     await order.save();
 
-    const vieworder = await Order.findOne({
-            ownerId: req.currentUser.ownerId,
-            status: "pending"
-        })
-        .sort({ createdAt: -1 })
-        .populate("items.productId", "-__v"); 
+    // const vieworder = await Order.findOne({
+    //         ownerId: req.currentUser.ownerId,
+    //         status: "pending"
+    //     })
+    //     .sort({ createdAt: -1 })
+    //     .populate("items.productId", "-__v"); 
 
+    const vieworder = await Order.findById(req.params.id).populate("items.productId", "-__v");
+
+    console.log(vieworder)
     const formattedItems = vieworder.items.map(item => {
         const { productId, ...rest } = item.toObject();
         return {
