@@ -4,7 +4,14 @@ const router = express.Router();
 const orderController = require("../controllers/orders.controller");
 const verifyToken = require("../middlewares/verifyToken");
 
-// router.use(verifyToken); // All routes below require auth
+router.route("/")
+    .get(orderController.getAllOrders);
+
+router.route("/status")
+    .get(orderController.getOrdersByStatusAndTotalAmount);
+
+router.route("/status/:id")
+    .patch(orderController.updateOrderStatus);
 
 router.route("/additem")
     .post(verifyToken, orderController.addItemToOrder);
@@ -20,5 +27,9 @@ router.route("/confirm/:id")
 
 router.route("/lastpending")
     .get(verifyToken, orderController.getLastPendingOrder);
+
+router.route("/:id")
+    .get(orderController.getOrderById)
+    .delete(orderController.deleteOrder);
 
 module.exports = router;
