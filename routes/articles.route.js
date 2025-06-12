@@ -9,7 +9,7 @@ const userRoles = require("../utils/userRoles");
 const upload = require("../middlewares/multer");
 
 router.route("/")
-    .get(verifyToken, articleController.getAllArticles);
+    .get(articleController.getAllArticles);
 
 router.route("/search")
     .get(verifyToken, articleController.searchArticles);
